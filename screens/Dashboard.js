@@ -1,62 +1,65 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { Card, Title, Paragraph } from 'react-native-paper';
+import { supabase } from '../supabase'; // <-- import your supabase client
 
 export default function Dashboard() {
-  const [temperature, setTemperature] = useState(25); // default dummy value
-  const [humidity, setHumidity] = useState(60); // default dummy value
+  const [temperature, setTemperature] = useState(0);
+  const [humidity, setHumidity] = useState(0);
 
-  // Simulate fetching data every 5 seconds
   useEffect(() => {
-    const interval = setInterval(() => {
-      // Replace this with your sensor or API data
-      const newTemp = (Math.random() * 10 + 20).toFixed(1); 
-      const newHum = (Math.random() * 20 + 50).toFixed(1);
+    // Get latest data initially
+    const fetchLatest = async () => {
+      const { data, error } = await supabase
+        .from('sensor_data')
+        .select('*')
+        .order('created_at', { ascending: false })
+        .limit(1);
 
-      setTemperature(newTemp);
-      setHumidity(newHum);
-    }, 5000);
+      if (data && data.length > 0) {
+        setTemperature(data[0].temperature);
+        setHumidity(data[0].humidity);
+      }
+    };
 
-    return () => clearInterval(interval);
+    fetchLatest();
+
+    // Subscribe to realtime changes
+    const subscription = supabase
+      .channel('realtime-sensor')
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'sensor_data' },
+        (payload) => {
+          setTemperature(payload.new.temperature);
+          setHumidity(payload.new.humidity);
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(subscription);
+    };
   }, []);
 
   return (
     <View style={styles.container}>
-      <Title style={styles.header}>Environment Dashboard</Title>
-      <Card style={styles.card}>
-        <Card.Content>
-          <Paragraph>Temperature</Paragraph>
-          <Text style={styles.value}>{temperature}°C</Text>
-        </Card.Content>
-      </Card>
-      <Card style={styles.card}>
-        <Card.Content>
-          <Paragraph>Humidity</Paragraph>
-          <Text style={styles.value}>{humidity}%</Text>
-        </Card.Content>
-      </Card>
+      <Text style={styles.header}>Realtime Dashboard</Text>
+      <View style={styles.card}>
+        <Text style={styles.label}>Temperature</Text>
+        <Text style={styles.value}>{temperature}°C</Text>
+      </View>
+      <View style={styles.card}>
+        <Text style={styles.label}>Humidity</Text>
+        <Text style={styles.value}>{humidity}%</Text>
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f2f2f2',
-    padding: 20,
-    justifyContent: 'center',
-  },
-  header: {
-    textAlign: 'center',
-    marginBottom: 20,
-  },
-  card: {
-    marginVertical: 10,
-    padding: 10,
-  },
-  value: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    marginTop: 5,
-  },
+  container: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#f2f2f2', padding: 20 },
+  header: { fontSize: 24, fontWeight: 'bold', marginBottom: 20 },
+  card: { width: '80%', backgroundColor: '#fff', padding: 20, borderRadius: 10, marginVertical: 10, alignItems: 'center', shadowColor: '#000', shadowOpacity: 0.1, shadowRadius: 10 },
+  label: { fontSize: 18, color: '#555' },
+  value: { fontSize: 32, fontWeight: 'bold', marginTop: 5 },
 });
