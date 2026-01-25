@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, Alert } from 'react-native';
-import { supabase } from '../supabase'; // <-- your file
+import { supabase } from '../supabase'; // <-- your Supabase setup
 
 export default function LoginScreen({ navigation }) {
   const [email, setEmail] = useState('');
@@ -17,7 +17,8 @@ export default function LoginScreen({ navigation }) {
         Alert.alert('Login Failed', error.message);
       } else {
         Alert.alert('Login Success', 'Welcome!');
-        navigation.replace('Dashboard'); // goes to your dashboard
+        // Navigate to the new HomeAfterLogin screen instead of Dashboard
+        navigation.replace('HomeAfterLogin'); 
       }
     } catch (err) {
       Alert.alert('Error', err.message);
