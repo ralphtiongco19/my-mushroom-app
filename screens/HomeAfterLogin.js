@@ -1,45 +1,70 @@
 import React from 'react';
-import { View, Text, Button, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 
-const HomeAfterLogin = ({ navigation }) => {
+export default function HomeAfterLogin({ navigation }) {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Welcome!</Text>
-      <Text style={styles.subtitle}>Choose an action below:</Text>
+      <Text style={styles.greeting}>Welcome Back!</Text>
+      <Text style={styles.subtitle}>Select an option to continue:</Text>
 
-      {/* Button to go to Dashboard */}
-      <Button
-        title="Go to Dashboard"
+      {/* Dashboard Card */}
+      <TouchableOpacity
+        style={styles.card}
         onPress={() => navigation.navigate('Dashboard')}
-      />
+      >
+        <Text style={styles.cardTitle}>Dashboard</Text>
+        <Text style={styles.cardSubtitle}>View your stats and data</Text>
+      </TouchableOpacity>
 
-      {/* Placeholder for future Camera Stream */}
-      <Button
-        title="Camera Stream"
-        onPress={() => navigation.navigate('CameraStream')} // You can create this later
-      />
+      {/* Camera Stream Card */}
+      <TouchableOpacity
+        style={styles.card}
+        onPress={() => Alert.alert('Coming Soon', 'Camera Stream feature will be added here.')}
+      >
+        <Text style={styles.cardTitle}>Camera Stream</Text>
+        <Text style={styles.cardSubtitle}>Stream your camera feed</Text>
+      </TouchableOpacity>
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
     padding: 20,
-    backgroundColor: '#fff',
+    backgroundColor: '#f5f5f5',
+    justifyContent: 'center',
   },
-  title: {
+  greeting: {
     fontSize: 28,
     fontWeight: 'bold',
-    marginBottom: 10,
+    marginBottom: 5,
+    textAlign: 'center',
   },
   subtitle: {
-    fontSize: 18,
-    marginBottom: 20,
+    fontSize: 16,
     color: '#555',
+    marginBottom: 30,
+    textAlign: 'center',
+  },
+  card: {
+    backgroundColor: '#fff',
+    padding: 20,
+    borderRadius: 15,
+    marginBottom: 20,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 10,
+    shadowOffset: { width: 0, height: 5 },
+    elevation: 5, // for Android shadow
+  },
+  cardTitle: {
+    fontSize: 20,
+    fontWeight: '600',
+    marginBottom: 5,
+  },
+  cardSubtitle: {
+    fontSize: 14,
+    color: '#777',
   },
 });
-
-export default HomeAfterLogin;
