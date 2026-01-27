@@ -7,6 +7,7 @@ import LoginScreen from './screens/LoginScreen';
 import SignupScreen from './screens/SignupScreen';
 import HomeAfterLogin from './screens/HomeAfterLogin'; // new screen
 import DashboardScreen from './screens/DashboardScreen';
+import CameraStreamScreen from './screens/CameraStreamScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -34,6 +35,9 @@ export default function App() {
 
         {/* Dashboard */}
         <Stack.Screen name="Dashboard" component={DashboardScreen} />
+
+        {/* Camera Stream */}
+        <Stack.Screen name="CameraStream" component={CameraStreamScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 
 export default function HomeAfterLogin({ navigation }) {
   return (
@@ -19,7 +19,7 @@ export default function HomeAfterLogin({ navigation }) {
       {/* Camera Stream Card */}
       <TouchableOpacity
         style={styles.card}
-        onPress={() => Alert.alert('Coming Soon', 'Camera Stream feature will be added here.')}
+        onPress={() => navigation.navigate('CameraStream')}
       >
         <Text style={styles.cardTitle}>Camera Stream</Text>
         <Text style={styles.cardSubtitle}>Stream your camera feed</Text>
