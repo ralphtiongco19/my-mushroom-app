@@ -6,7 +6,7 @@ export default function CameraStreamScreen({ navigation }) {
   const [streamActive, setStreamActive] = useState(false);
 
   // Replace with your ESP32 camera IP address
-  const ESP32_CAMERA_URL = 'http://10.118.152.30:81/stream'; // Change this to your ESP32 IP
+  const ESP32_CAMERA_URL = 'http://10.116.82.50:81/stream'; // Change this to your ESP32 IP
 
   const toggleStream = () => {
     if (!streamActive) {
